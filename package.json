@@ -1,0 +1,23 @@
+{
+  "name": "cms-employee-tracker",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "dependencies": {
+    "console.table": "^0.10.0",
+    "dotenv": "^10.0.0",
+    "inquirer": "^8.1.2",
+    "mysql2": "^2.2.5"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/weingeoffrey/cms-employee-tracker.git"
+  },
+  "author": "Geoffrey Wein",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/weingeoffrey/cms-employee-tracker/issues"
+  },
+  "homepage": "https://github.com/weingeoffrey/cms-employee-tracker#readme"
+}
