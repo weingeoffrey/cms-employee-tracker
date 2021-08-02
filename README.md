@@ -32,6 +32,11 @@ From the root of the file you will have to run the following to install the nece
     npm start
 
 Once installed a console application will launch and you are able to view all departments, roles, and employees. You can also add a department, role, and employee. You can also update an existing employee's role
+
+
+<iframe src="https://drive.google.com/file/d/1KtvKxf59_fC_5et3O1j_mZAGystwrdXg/preview" width="640" height="480" allow="autoplay"></iframe>
+
+
 ## Questions
 
 If you have any questions feel free to reach me at:
