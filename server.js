@@ -26,13 +26,19 @@ function initialPrompt() {
     .then(function ({task}) {
         switch (task) {
             case "View all Departments":
+                console.log("=====================================================")
                 viewDepartments();
+                console.log("=====================================================")
                 break;
             case "View all Roles":
+                console.log("=====================================================")
                 viewRoles();
+                console.log("=====================================================")
                 break;
             case "View all Employees":
+                console.log("=====================================================")
                 viewEmployees();
+                console.log("=====================================================")
                 break;
             case "Add a Department":
                 addDepartment();
@@ -47,12 +53,22 @@ function initialPrompt() {
                 updateEmployee();
                 break;
             case "End":
+                console.log("=====================================================")
                 console.log("Goodbye!");
+                console.log("=====================================================")
                 db.end();
         }
     })
 }
 function init() {
+    console.log(
+`
+
+█▀▀ █▀▄▀█ █▀█ █░░ █▀█ █▄█ █▀▀ █▀▀   ▀█▀ █▀█ ▄▀█ █▀▀ █▄▀ █▀▀ █▀█
+██▄ █░▀░█ █▀▀ █▄▄ █▄█ ░█░ ██▄ ██▄   ░█░ █▀▄ █▀█ █▄▄ █░█ ██▄ █▀▄
+
+`        
+)
     initialPrompt();
 }
 function viewDepartments() {
@@ -60,6 +76,7 @@ function viewDepartments() {
     db.promise().query(query)
       .then(([rows,fields]) => {
           console.table(rows);
+          console.log("=====================================================")
           initialPrompt();
       })
       .catch(console.log);
@@ -72,6 +89,7 @@ function viewRoles() {
     db.promise().query(query)
       .then(([rows,fields]) => {
           console.table(rows);
+          console.log("=====================================================")
           initialPrompt();
       })
       .catch(console.log);
@@ -86,6 +104,7 @@ function viewEmployees() {
     db.promise().query(query)
       .then(([rows,fields]) => {
           console.table(rows);
+          console.log("=====================================================")
           initialPrompt();
       })
       .catch(console.log);
@@ -104,7 +123,8 @@ function addDepartment() {
                         VALUES ('${answer.department_name}')`
           db.promise().query(query).then(([rows,fields]) => {
               console.log("Department added!");
-              viewDepartments();
+              console.log("=====================================================")
+              initialPrompt();
             })
             .catch(console.log);
         })
@@ -142,9 +162,106 @@ function addRole() {
                             ('${answer.role_title}', ${answer.salary_amount}, ${answer.department.charAt(0)})`;
             db.promise().query(query).then(([rows,fields]) => {
               console.log("Role added!");
+              console.log("=====================================================")
               initialPrompt();
             })
             .catch(console.log);
+        })
+    })
+}
+
+function addEmployee() {
+    let query = `SELECT id, title FROM roles`;
+    db.promise().query(query).then(([rows, fields]) => {
+        roleChoices = rows.map(({id, title}) => (
+            `${id} ${title}`
+        ));
+        
+        let query = `SELECT id, CONCAT(first_name, " ", last_name) AS manager from employee`
+        db.promise().query(query).then(([rows, fields]) => {
+            managerChoices = rows.map(({id, manager}) => (
+                `${id} ${manager}`
+            ));
+            inquirer.prompt([
+                {
+                    type: "input",
+                    name: "first_name",
+                    message: "Enter the Employee's First Name:"
+                },
+                {
+                    type: "input",
+                    name: "last_name",
+                    message: "Enter the Employee's Last Name:"
+                },
+                {
+                    type: "list",
+                    name: "role",
+                    message: "Select the role:",
+                    loop: false,
+                    choices: roleChoices
+                },
+                {
+                    type: "list",
+                    name: "manager",
+                    message: "Select the manager:",
+                    loop: false,
+                    choices: managerChoices
+                }
+            ])
+            .then((answer) => {
+                let query = `INSERT INTO employee
+                                (first_name, last_name, role_id, manager_id)
+                             VALUES
+                                ('${answer.first_name}', '${answer.last_name}', ${answer.role.charAt(0)}, ${answer.manager.charAt(0)})`;
+                db.promise().query(query).then(([rows,fields]) => {
+                    console.log("Employee added!");
+                    console.log("=====================================================")
+                    initialPrompt();
+                })
+                .catch(console.log);
+            })
+        })
+    })
+}
+
+function updateEmployee() {
+    let query = `SELECT id, title FROM roles`;
+    db.promise().query(query).then(([rows, fields]) => {
+        roleChoices = rows.map(({id, title}) => (
+            `${id} ${title}`
+        ));
+        
+        let query = `SELECT id, CONCAT(first_name, " ", last_name) AS employee from employee`
+        db.promise().query(query).then(([rows, fields]) => {
+            employeeChoices = rows.map(({id, employee}) => (
+                `${id} ${employee}`
+            ));
+            inquirer.prompt([
+                {
+                    type: "list",
+                    name: "employee",
+                    message: "Select the Employee you'd like to update:",
+                    choices: employeeChoices
+                },
+                {
+                    type: "list",
+                    name: "role",
+                    message: "Select the role:",
+                    loop: false,
+                    choices: roleChoices
+                },
+            ])
+            .then((answer) => {
+                let query = `UPDATE employee
+                             SET role_id = ${answer.role.charAt(0)}
+                             WHERE id = ${answer.employee.charAt(0)}`;
+                db.promise().query(query).then(([rows,fields]) => {
+                    console.log("=====================================================")
+                    console.log("Employee Role Updated!");
+                    initialPrompt();
+                })
+                .catch(console.log);
+            })
         })
     })
 }
