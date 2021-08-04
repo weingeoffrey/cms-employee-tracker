@@ -29,6 +29,7 @@ Start your SQL server then navigate to the db folder from the cmd line, you will
 ## Usage
 From the root of the file you will have to run the following to install the necessary packages and start the program
 
+    npm install
     npm start
 
 Once installed a console application will launch and you are able to view all departments, roles, and employees. You can also add a department, role, and employee. You can also update an existing employee's role
